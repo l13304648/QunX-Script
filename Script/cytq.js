@@ -3,7 +3,7 @@
 Svip解锁
 
 [rewrite_local]
-^https:\/\/biz\.caiyunapp\.com\/v2\/user\?app\_name\=weather url script-response-body cytq.js
+^https:\/\/biz\.caiyunapp\.com\/v2\/user\?app\_name\=weather url script-response-body https://raw.githubusercontent.com/l13304648/QunX-Script/main/Script/cytq.js
 
 [MITM]
 hostname = biz.caiyunapp.com
