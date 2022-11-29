@@ -4,7 +4,7 @@ vip解锁
 
 
 [rewrite_local]
-^https:\/\/snailsleep\.net\/snail\/v1\/profile\/get\? url script-response-body wnsm2.js
+^https:\/\/snailsleep\.net\/snail\/v1\/profile\/get\? url script-response-body https://raw.githubusercontent.com/l13304648/QunX-Script/main/Script/wnsm2.js
 
 [MITM]
 hostname = snailsleep.net
