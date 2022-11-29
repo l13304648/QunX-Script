@@ -1,7 +1,7 @@
 /*
 
 [rewrite_local]
-^https?:\/\/api\.revenuecat\.com\/v1\/(receipts|subscribers\/\$RCAnonymousID%3A\w{32})$ url script-response-body https://raw.githubusercontent.com/l13304648/QunX-Script/main/Script/subs.js
+^https:\/\/api\.revenuecat\.com\/v1\/(subscribers|receipts) url script-response-body https://raw.githubusercontent.com/l13304648/QunX-Script/main/Script/subs.js
 
 [mitm]
 hostname = api.revenuecat.com
