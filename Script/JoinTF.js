@@ -60,7 +60,7 @@ const headers = {
     'X-Session-Id': SessionId,
     'X-Session-Digest': SessionDigest,
     'X-Request-Id': RequestId,
-    'User-Agent': UserAgent
+    'User-Agent': user_agent
 }
 const inArray = (value, array = APP_IDS, separator = '#') => array.findIndex((item) => item.split(separator)[0] === value)
 // 获取参数
@@ -83,7 +83,7 @@ const getParams = () => {
         const session_id = headers['x-session-id']
         const session_digest = headers['x-session-digest']
         const request_id = headers['x-request-id']
-        const user_agent = headers['User-Agent']
+        const user_agent = headers['user-agent']
         const key = /\/accounts\/(.*?)\/apps/.exec(url)?.[1] || null
         $.setdata(session_id, 'tf_session_id')
         $.setdata(session_digest, 'tf_session_digest')
