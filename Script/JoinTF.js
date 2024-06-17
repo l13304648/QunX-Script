@@ -45,7 +45,7 @@ const [
     SessionId,
     SessionDigest,
     RequestId,
-    user_agent,
+    useragent,
     // ----------
     // 应用参数
     APP_ID_Str,
@@ -60,7 +60,7 @@ const headers = {
     'X-Session-Id': SessionId,
     'X-Session-Digest': SessionDigest,
     'X-Request-Id': RequestId,
-    'User-Agent': user_agent
+    'User-Agent': useragent
 }
 const inArray = (value, array = APP_IDS, separator = '#') => array.findIndex((item) => item.split(separator)[0] === value)
 // 获取参数
