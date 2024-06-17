@@ -15,26 +15,26 @@
 hostname = testflight.apple.com
 
 [rewrite_local]
-^https:\/\/testflight\.apple\.com\/(v3\/accounts\/.*[^\/accept]|join\/[A-Za-z0-9]+)$ url script-request-header https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/AutoJoinTF.js
+^https:\/\/testflight\.apple\.com\/(v3\/accounts\/.*[^\/accept]|join\/[A-Za-z0-9]+)$ url script-request-header https://raw.githubusercontent.com/l13304648/QunX-Script/main/Script/JoinTF.js
 
 [task_local]
-0/5 * * * * * https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/AutoJoinTF.js, tag=TF监控自动加入, img-url=https://raw.githubusercontent.com/githubdulong/Script/master/Images/testflight.png, enabled=true
+0/5 * * * * * https://raw.githubusercontent.com/l13304648/QunX-Script/main/Script/JoinTF.js, tag=TF监控自动加入, img-url=https://raw.githubusercontent.com/githubdulong/Script/master/Images/testflight.png, enabled=true
 ******************************************
 Loon配置:
 [MITM]
 hostname = testflight.apple.com
 
 [Script]
-http-request ^https:\/\/testflight\.apple\.com\/(v3\/accounts\/.*[^\/accept]|join\/[A-Za-z0-9]+)$ tag=TF获取参数, script-path=https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/AutoJoinTF.js
-cron "0/5 * * * * *" script-path=https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/AutoJoinTF.js, timeout=10, tag=TF监控自动加入, img-url=https://raw.githubusercontent.com/githubdulong/Script/master/Images/testflight.png
+http-request ^https:\/\/testflight\.apple\.com\/(v3\/accounts\/.*[^\/accept]|join\/[A-Za-z0-9]+)$ tag=TF获取参数, script-path=https://raw.githubusercontent.com/l13304648/QunX-Script/main/Script/JoinTF.js
+cron "0/5 * * * * *" script-path=https://raw.githubusercontent.com/l13304648/QunX-Script/main/Script/JoinTF.js, timeout=10, tag=TestFlight监控, img-url=https://raw.githubusercontent.com/githubdulong/Script/master/Images/testflight.png
 ******************************************
 Surge配置:
 [MITM]
 hostname = %APPEND% testflight.apple.com
 
 [Script]
-TF获取参数 = type=http-request,pattern=^https:\/\/testflight\.apple\.com\/(v3\/accounts\/.*[^\/accept]|join\/[A-Za-z0-9]+)$,requires-body=0,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/AutoJoinTF.js,script-update-interval=0
-TF监控自动加入 = type=cron,cronexp="0/5 * * * * *",wake-system=1,script-path=https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/AutoJoinTF.js,timeout=60
+TF获取参数 = type=http-request,pattern=^https:\/\/testflight\.apple\.com\/(v3\/accounts\/.*[^\/accept]|join\/[A-Za-z0-9]+)$,requires-body=0,max-size=0,timeout=1000,script-path=https://raw.githubusercontent.com/l13304648/QunX-Script/main/Script/JoinTF.js,script-update-interval=0
+TF监控自动加入 = type=cron,cronexp="0/5 * * * * *",wake-system=1,script-path=https://raw.githubusercontent.com/l13304648/QunX-Script/main/Script/JoinTF.js,timeout=60
 ******************************************/
 const $ = new Env('𝐓𝐞𝐬𝐭𝐅𝐥𝐢𝐠𝐡𝐭自动加入')
 $.isRequest = () => 'undefined' != typeof $request
@@ -45,6 +45,7 @@ const [
     SessionId,
     SessionDigest,
     RequestId,
+    UserAgent,
     // ----------
     // 应用参数
     APP_ID_Str,
@@ -52,13 +53,14 @@ const [
     // 配置参数
     LOON_COUNT = 1, // 每次执行循环执行多少次 默认1
     INTERVAL = 0 // 等待时间, 单位: 秒 默认0
-] = ['tf_key', 'tf_session_id', 'tf_session_digest', 'tf_request_id', 'tf_app_ids', 'tf_loon_count', 'tf_interval'].map((key) => $.getdata(key))
+] = ['tf_key', 'tf_session_id', 'tf_session_digest', 'tf_request_id', 'tf_User_Agent', 'tf_app_ids', 'tf_loon_count', 'tf_interval'].map((key) => $.getdata(key))
 var APP_IDS = APP_ID_Str ? APP_ID_Str.split(',') : []
 const baseURL = `https://testflight.apple.com/v3/accounts/${Key}/ru/`
 const headers = {
     'X-Session-Id': SessionId,
     'X-Session-Digest': SessionDigest,
-    'X-Request-Id': RequestId
+    'X-Request-Id': RequestId,
+    'User-Agent': UserAgent
 }
 const inArray = (value, array = APP_IDS, separator = '#') => array.findIndex((item) => item.split(separator)[0] === value)
 // 获取参数
@@ -81,13 +83,15 @@ const getParams = () => {
         const session_id = headers['x-session-id']
         const session_digest = headers['x-session-digest']
         const request_id = headers['x-request-id']
+        const User_Agent = headers['User-Agent']
         const key = /\/accounts\/(.*?)\/apps/.exec(url)?.[1] || null
         $.setdata(session_id, 'tf_session_id')
         $.setdata(session_digest, 'tf_session_digest')
         $.setdata(request_id, 'tf_request_id')
+        $.setdata(User_Agent, 'tf_User_Agent')
         $.setdata(key, 'tf_key')
         const encrypt = (str) => str.slice(0, 4) + '***********'
-        $.msg($.name, 'TF参数获取成功', `𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐢𝐝: ${encrypt(session_id)}\n𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐝𝐢𝐠𝐞𝐬𝐭: ${encrypt(session_digest)}\n𝐫𝐞𝐪𝐮𝐞𝐬𝐭_𝐢𝐝: ${encrypt(request_id)}\n𝐤𝐞𝐲: ${encrypt(key)}`)
+        $.msg($.name, 'TF参数获取成功', `𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐢𝐝: ${encrypt(session_id)}\n𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐝𝐢𝐠𝐞𝐬𝐭: ${encrypt(session_digest)}\n𝐫𝐞𝐪𝐮𝐞𝐬𝐭_𝐢𝐝: ${encrypt(request_id)}\nUser_Agent: ${encrypt(User_Agent)}\n𝐤𝐞𝐲: ${encrypt(key)}`)
     }
     // 打开链接需要抓取的参数
     else if (/^https:\/\/testflight\.apple\.com\/join\/([A-Za-z0-9]+)$/.test(url)) {
