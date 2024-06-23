@@ -108,42 +108,43 @@ const getParams = () => {
         handler(appId)
     }
 }
+
 // 检查TF应用
 const TF_Check = (app_id) => {
-    const retryLimit = 3;
-    const retryDelay = 5000; // 5秒
+    let retryCount = 0;
 
-    const makeRequest = (attempt) => {
+    const checkAppStatus = () => {
         return new Promise((resolve, reject) => {
             $.get({ url: baseURL + app_id, headers }, (error, response, data) => {
                 if (error) {
-                    return reject(`${app_id} 网络请求失败: ${error}`);
+                    return reject(`${app_id} 网络请求失败: ${error}`)
                 }
-
                 if (response.status === 200) {
                     const appData = $.toObj(data);
                     if (!appData) {
                         return reject(`${app_id} 数据解析失败: ${data}`);
                     }
-                    return resolve(appData);
-                }
-
-                if (attempt < retryLimit - 1) {
-                    setTimeout(() => {
-                        makeRequest(attempt + 1).then(resolve).catch(reject);
-                    }, retryDelay);
+                    resolve(appData);
                 } else {
-                    APP_IDS.splice(inArray(app_id), 1);
-                    $.setdata(APP_IDS.join(','), 'tf_app_ids');
-                    $.msg('不是有效的𝐓𝐞𝐬𝐭𝐅𝐥𝐢𝐠𝐡𝐭链接', '', `${app_id} 已被移除`);
-                    return reject(`${app_id} 不是有效链接: 状态码 ${response.status}，移除 APP_ID`);
+                    retryCount++;
+                    if (retryCount < 3) {
+                        // Retry after 5 seconds
+                        setTimeout(checkAppStatus, 5000);
+                    } else {
+                        // Remove app_id from APP_IDS
+                        APP_IDS.splice(inArray(app_id), 1);
+                        $.setdata(APP_IDS.join(','), 'tf_app_ids');
+                        $.msg('不是有效的𝐓𝐞𝐬𝐭𝐅𝐥𝐢𝐠𝐡𝐭链接', '', `${app_id} 已被移除`);
+                        reject(`${app_id} 不是有效链接: 状态码 ${response.status}，移除 APP_ID`);
+                    }
                 }
             });
         });
     };
 
-    return makeRequest(0);
-};
+    // Start checking app status
+    return checkAppStatus();
+}
 
 
 // 加入TF应用
