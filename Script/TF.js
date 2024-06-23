@@ -147,7 +147,7 @@ const TF_Check = (app_id) => {
                         // Remove app_id from APP_IDS
                         //APP_IDS.splice(inArray(app_id), 1);
                         //$.setdata(APP_IDS.join(','), 'tf_app_ids');
-                        $.msg('𝐓𝐞𝐬𝐭𝐅𝐥𝐢𝐠𝐡𝐭链接错误', '', `ID: ${app_id} 请手动检测。`);
+                        $.msg('𝐓𝐞𝐬𝐭𝐅𝐥𝐢𝐠𝐡𝐭链接错误', '', `ID: ${app_id} 请手动检测。\n链接：${baseURL + app_id}`);
                         reject(`${app_id} 不是有效链接: 状态码 ${response.status}，移除 APP_ID`);
                     }
                 }
