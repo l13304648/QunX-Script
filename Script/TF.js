@@ -57,10 +57,20 @@ const [
 var APP_IDS = APP_ID_Str ? APP_ID_Str.split(',') : []
 const baseURL = `https://testflight.apple.com/v3/accounts/${Key}/ru/`
 const headers = {
+    'Host': 'testflight.apple.com',
+    'Accept': 'application/json',
     'X-Session-Id': SessionId,
     'X-Session-Digest': SessionDigest,
+    'X-Apple-Store-Front': '143441-19,29',
+    'Accept-Encoding': 'br, gzip, deflate',
+    'Accept-Language': 'zh-CN',
+    'X-Apple-TA-Device': 'iPhone16,2 iPhone15,3',
     'X-Request-Id': RequestId,
-    'User-Agent': UserAgent
+    'X-Apple-AMD-M': 'voFB/NmbRX4u1+z4vd12AnIyx2iXtXcj1Ise3RhmHcBmGvZieUsvTchg4C7nY5T5tkwg6od8lIwEy7yd',
+    'User-Agent': UserAgent,
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/json',
+    'X-Apple-Device-Model': 'iPhone16,2'
 }
 const inArray = (value, array = APP_IDS, separator = '#') => array.findIndex((item) => item.split(separator)[0] === value)
 // 获取参数
