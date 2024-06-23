@@ -128,12 +128,12 @@ const TF_Check = (app_id) => {
             if (error) {
                 return reject(`${app_id} 网络请求失败: ${error}`)
             }
-            if (response.status !== 200) {
+            //if (response.status !== 200) {
                 //APP_IDS.splice(inArray(app_id), 1)
                 //$.setdata(APP_IDS.join(','), 'tf_app_ids')
-                $.msg('𝐓𝐞𝐬𝐭𝐅𝐥𝐢𝐠𝐡𝐭错误', '', `ID: ${app_id} 状态码不正确，请手动检查。\n链接：https://testflight.apple.com/join/${app_id}`);
-                return reject(`${app_id} 错误: 状态码 ${response.status}，请手动检查：\n链接：https://testflight.apple.com/join/${app_id}`)
-            }
+                //$.msg('𝐓𝐞𝐬𝐭𝐅𝐥𝐢𝐠𝐡𝐭错误', '', `ID: ${app_id} 状态码不正确，请手动检查。\n链接：https://testflight.apple.com/join/${app_id}`);
+                //return reject(`${app_id} 错误: 状态码 ${response.status}，请手动检查：\n链接：https://testflight.apple.com/join/${app_id}`)
+            //}
             const appData = $.toObj(data)
             if (!appData) {
                 return reject(`${app_id} 数据解析失败: ${data}`)
