@@ -138,11 +138,11 @@ const TF_Check = (app_id, retryCount = 3) => {
                     return reject(`${app_id} 数据解析失败: ${data}`);
                 }
                 resolve(appData);
-            })
-        }
+            });
+        };
         tryRequest(1);
-    })
-}
+    });
+};
 // 加入TF应用
 const TF_Join = (app_id) => {
     return new Promise((resolve, reject) => {
