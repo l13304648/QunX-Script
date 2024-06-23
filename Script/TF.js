@@ -95,16 +95,16 @@ const getParams = () => {
         const session_digest = headers['x-session-digest']
         const request_id = headers['x-request-id']
         const user_agent = headers['user-agent']
-        const x_apple_amd_m = headers['X-Apple-AMD-M']
+        const apple_amd = headers['x-apple-amd-m']
         const key = /\/accounts\/(.*?)\/apps/.exec(url)?.[1] || null
         $.setdata(session_id, 'tf_session_id')
         $.setdata(session_digest, 'tf_session_digest')
         $.setdata(request_id, 'tf_request_id')
         $.setdata(user_agent, 'tf_user_agent')
-        $.setdata(x_apple_amd_m, 'tf_appleamd')
+        $.setdata(apple_amd, 'tf_appleamd')
         $.setdata(key, 'tf_key')
         const encrypt = (str) => str.slice(0, 4) + '***********'
-        $.msg($.name, 'TF参数获取成功', `𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐢𝐝: ${encrypt(session_id)}\n𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐝𝐢𝐠𝐞𝐬𝐭: ${encrypt(session_digest)}\n𝐫𝐞𝐪𝐮𝐞𝐬𝐭_𝐢𝐝: ${encrypt(request_id)}\nuser_agent: ${encrypt(user_agent)}\nx_apple_amd_m: ${encrypt(x_apple_amd_m)}\n𝐤𝐞𝐲: ${encrypt(key)}`)
+        $.msg($.name, 'TF参数获取成功', `𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐢𝐝: ${encrypt(session_id)}\n𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐝𝐢𝐠𝐞𝐬𝐭: ${encrypt(session_digest)}\n𝐫𝐞𝐪𝐮𝐞𝐬𝐭_𝐢𝐝: ${encrypt(request_id)}\nuser_agent: ${encrypt(user_agent)}\napple_amd: ${encrypt(apple_amd)}\n𝐤𝐞𝐲: ${encrypt(key)}`)
     }
     // 打开链接需要抓取的参数
     else if (/^https:\/\/testflight\.apple\.com\/join\/([A-Za-z0-9]+)$/.test(url)) {
