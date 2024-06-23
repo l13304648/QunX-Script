@@ -46,6 +46,7 @@ const [
     SessionDigest,
     RequestId,
     UserAgent,
+    XAppleAMDM,
     // ----------
     // 应用参数
     APP_ID_Str,
@@ -53,7 +54,7 @@ const [
     // 配置参数
     LOON_COUNT = 1, // 每次执行循环执行多少次 默认1
     INTERVAL = 0 // 等待时间, 单位: 秒 默认0
-] = ['tf_key', 'tf_session_id', 'tf_session_digest', 'tf_request_id', 'tf_user_agent', 'tf_app_ids', 'tf_loon_count', 'tf_interval'].map((key) => $.getdata(key))
+] = ['tf_key', 'tf_session_id', 'tf_session_digest', 'tf_request_id', 'tf_user_agent', 'tf_appleamd', 'tf_app_ids', 'tf_loon_count', 'tf_interval'].map((key) => $.getdata(key))
 var APP_IDS = APP_ID_Str ? APP_ID_Str.split(',') : []
 const baseURL = `https://testflight.apple.com/v3/accounts/${Key}/ru/`
 const headers = {
@@ -66,7 +67,7 @@ const headers = {
     'Accept-Language': 'zh-CN',
     'X-Apple-TA-Device': 'iPhone16,2 iPhone15,3',
     'X-Request-Id': RequestId,
-    'X-Apple-AMD-M': 'voFB/NmbRX4u1+z4vd12AnIyx2iXtXcj1Ise3RhmHcBmGvZieUsvTchg4C7nY5T5tkwg6od8lIwEy7yd',
+    'X-Apple-AMD-M': tf_appleamd,
     'User-Agent': UserAgent,
     'Connection': 'keep-alive',
     'Content-Type': 'application/json',
@@ -94,11 +95,13 @@ const getParams = () => {
         const session_digest = headers['x-session-digest']
         const request_id = headers['x-request-id']
         const user_agent = headers['user-agent']
+        const x_apple_amd_m = headers['X-Apple-AMD-M']
         const key = /\/accounts\/(.*?)\/apps/.exec(url)?.[1] || null
         $.setdata(session_id, 'tf_session_id')
         $.setdata(session_digest, 'tf_session_digest')
         $.setdata(request_id, 'tf_request_id')
         $.setdata(user_agent, 'tf_user_agent')
+        $.setdata(x_apple_amd_m, 'tf_appleamd')
         $.setdata(key, 'tf_key')
         const encrypt = (str) => str.slice(0, 4) + '***********'
         $.msg($.name, 'TF参数获取成功', `𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐢𝐝: ${encrypt(session_id)}\n𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐝𝐢𝐠𝐞𝐬𝐭: ${encrypt(session_digest)}\n𝐫𝐞𝐪𝐮𝐞𝐬𝐭_𝐢𝐝: ${encrypt(request_id)}\nuser_agent: ${encrypt(user_agent)}\n𝐤𝐞𝐲: ${encrypt(key)}`)
