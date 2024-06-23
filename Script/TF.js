@@ -109,40 +109,26 @@ const getParams = () => {
     }
 }
 // 检查TF应用
-const TF_Check = (app_id, retryCount = 3) => {
+const TF_Check = (app_id) => {
     return new Promise((resolve, reject) => {
-        const tryRequest = async (attempt) => {
-            if (attempt > retryCount) {
-                return reject(`Exceeded retry limit for ${app_id}`);
+        $.get({ url: baseURL + app_id, headers }, (error, response, data) => {
+            if (error) {
+                return reject(`${app_id} 网络请求失败: ${error}`)
             }
-
-            $.get({ url: baseURL + app_id, headers }, async (error, response, data) => {
-                if (error) {
-                    return reject(`${app_id} 网络请求失败: ${error}`);
-                }
-                if (response.status !== 200) {
-                    if (attempt < retryCount) {
-                        $.log(`${app_id} 请求失败，状态码 ${response.status}，将在5秒后重试... (尝试次数 ${attempt + 1}/${retryCount})`);
-                        await $.wait(5000); // 等待5秒
-                        return tryRequest(attempt + 1);
-                    } else {
-                        APP_IDS.splice(inArray(app_id), 1);
-                        $.setdata(APP_IDS.join(','), 'tf_app_ids');
-                        $.msg('不是有效的𝐓𝐞𝐬𝐭𝐅𝐥𝐢𝐠𝐡𝐭链接', '', `${app_id} 已被移除`);
-                        return reject(`${app_id} 不是有效链接: 状态码 ${response.status}，移除 APP_ID`);
-                    }
-                }
-
-                const appData = $.toObj(data);
-                if (!appData) {
-                    return reject(`${app_id} 数据解析失败: ${data}`);
-                }
-                resolve(appData);
-            });
-        };
-        tryRequest(1);
-    });
-};
+            if (response.status !== 200) {
+                APP_IDS.splice(inArray(app_id), 1)
+                $.setdata(APP_IDS.join(','), 'tf_app_ids')
+                $.msg('不是有效的𝐓𝐞𝐬𝐭𝐅𝐥𝐢𝐠𝐡𝐭链接', '', `${app_id} 已被移除`)
+                return reject(`${app_id} 不是有效链接: 状态码 ${response.status}，移除 APP_ID`)
+            }
+            const appData = $.toObj(data)
+            if (!appData) {
+                return reject(`${app_id} 数据解析失败: ${data}`)
+            }
+            resolve(appData)
+        })
+    })
+}
 // 加入TF应用
 const TF_Join = (app_id) => {
     return new Promise((resolve, reject) => {
