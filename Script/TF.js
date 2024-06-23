@@ -67,7 +67,7 @@ const headers = {
     'Accept-Language': 'zh-CN',
     'X-Apple-TA-Device': 'iPhone16,2 iPhone15,3',
     'X-Request-Id': RequestId,
-    'X-Apple-AMD-M': tf_appleamd,
+    'X-Apple-AMD-M': XAppleAMDM,
     'User-Agent': UserAgent,
     'Connection': 'keep-alive',
     'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ const getParams = () => {
         $.setdata(x_apple_amd_m, 'tf_appleamd')
         $.setdata(key, 'tf_key')
         const encrypt = (str) => str.slice(0, 4) + '***********'
-        $.msg($.name, 'TF参数获取成功', `𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐢𝐝: ${encrypt(session_id)}\n𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐝𝐢𝐠𝐞𝐬𝐭: ${encrypt(session_digest)}\n𝐫𝐞𝐪𝐮𝐞𝐬𝐭_𝐢𝐝: ${encrypt(request_id)}\nuser_agent: ${encrypt(user_agent)}\n𝐤𝐞𝐲: ${encrypt(key)}`)
+        $.msg($.name, 'TF参数获取成功', `𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐢𝐝: ${encrypt(session_id)}\n𝐬𝐞𝐬𝐬𝐢𝐨𝐧_𝐝𝐢𝐠𝐞𝐬𝐭: ${encrypt(session_digest)}\n𝐫𝐞𝐪𝐮𝐞𝐬𝐭_𝐢𝐝: ${encrypt(request_id)}\nuser_agent: ${encrypt(user_agent)}\nx_apple_amd_m: ${encrypt(x_apple_amd_m)}\n𝐤𝐞𝐲: ${encrypt(key)}`)
     }
     // 打开链接需要抓取的参数
     else if (/^https:\/\/testflight\.apple\.com\/join\/([A-Za-z0-9]+)$/.test(url)) {
